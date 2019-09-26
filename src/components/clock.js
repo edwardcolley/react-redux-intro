@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { tick } from '../actions'
+import { tick, setTextColor } from '../actions'
 
 class Clock extends Component {
 
@@ -9,17 +9,35 @@ class Clock extends Component {
     }
 
     render(){
+        const { time, date, setTextColor } = this.props;
+
+        const style = {
+            color: this.props.textColor
+        }
+
         console.log('Clock props: ', this.props);
         return(
-            <h1>{this.props.time}</h1>
+            <div style={style}>
+                <h1>{time}</h1>
+                <h2>{date}</h2> 
+                <button onClick={() => setTextColor('red')}>Red</button> 
+                <button onClick={() => setTextColor('green')}>Green</button> 
+                <button onClick={() => setTextColor('yellow')}>Yellow</button>
+            </div>
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
-        time: state.clock.time
+        date: state.clock.date,
+        time: state.clock.time,
+        textColor: state.theme.textColor
     }
 }
 
-export default connect(mapStateToProps, { tick: tick })(Clock);
+//connect passes whatever is in mapStateToProps from redux state into this components props with second parameter being the actions(names from imported function names). then calls the return on the component name as a function.
+export default connect(mapStateToProps, { 
+    tick: tick,
+    setTextColor: setTextColor
+ })(Clock);
